@@ -1,0 +1,14 @@
+{
+  "name": "remove-autotest-temp",
+  "version": "0.0.1",
+  "description": "Removes autotest temp resources",
+  "main": "run.js",
+  "scripts": {
+    "start": "node run.js"
+  },
+  "author": "gsorcal@gmail.com",
+  "dependencies": {
+    "log4js": "^1.1.1",
+    "rimraf": "^2.6.1"
+  }
+}
