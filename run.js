@@ -15,9 +15,13 @@ function getUserHome() {
     return process.env[isWindows() ? 'USERPROFILE' : 'HOME'];
 }
 
-function getTempResources(rootDir, dateStarted) {
+function testWindowsResourse(resourse) {
+    return /^\d+_\d+$/.test(resourse) || /^scoped_dir.+/.test(resourse) || /^\w+\.json\.gzip$/.test(resourse);
+}
+
+function getTempResources(rootDir, dateStarted, testFunc) {
     return fs.readdirSync(rootDir).filter(dir => {
-        if ((/^\d+_\d+$/.test(dir) || /^scoped_dir.+/.test(dir) || /^\w+\.json\.gzip$/.test(dir))) {
+        if (testFunc(dir)) {
             let dirStats = fs.statSync(path.join(rootDir, dir));
             return dirStats && dirStats.ctime && new Date(dirStats.ctime).getTime() < (dateStarted - TIME_SHIFT);
         }
@@ -29,7 +33,7 @@ function cleanTempOnWindows() {
     let dateStarted = Date.now();
     let tempDir = path.join(getUserHome(), 'AppData', 'Local', 'Temp');
     logger.info(`inspecting ${tempDir} directory ...`);
-    let resourcesList = getTempResources(tempDir, dateStarted);
+    let resourcesList = getTempResources(tempDir, dateStarted, testWindowsResourse);
 
     logger.info(`${resourcesList.length} temp resources found`);
     let removedAmount = 0;
