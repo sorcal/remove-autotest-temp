@@ -12,7 +12,7 @@ function isWindows() {
 }
 
 function getUserHome() {
-    return process.env[isWindows ? 'USERPROFILE' : 'HOME'];
+    return process.env[isWindows() ? 'USERPROFILE' : 'HOME'];
 }
 
 function getTempResources(rootDir, dateStarted) {
